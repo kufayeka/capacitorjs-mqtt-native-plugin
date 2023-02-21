@@ -23,7 +23,7 @@ Here are some examples of how to use the plugin in your capacitorJS project usin
 - [`Publishing a Message to an MQTT Topic`](#publish-to-topic)
 - [`Listen to Incoming Messages`](#message-arrived-event)
 - [`Listen to ConnectComplete Event`](#connect-complete-event)
-- [`Listen to ConnectionLost Event`](#listen-to-connectionlost-event)
+- [`Listen to ConnectionLost Event`](#connection-lost-event)
 
 <a name="connect-to-broker"></a>
 
@@ -70,7 +70,7 @@ you can also add optional connect options parameter like `lastWill` to the `conn
   }
 ```
 
-<a name="#disconnect-from-broker"></a>
+<a name="disconnect-from-broker"></a>
 
 ### Disconnecting from the MQTT Broker :
 
@@ -93,6 +93,8 @@ MqttBridge.disconnect()
     );
   });
 ```
+
+<a name="subscribe-to-topic"></a>
 
 ### Subscribing to an MQTT Topic :
 
@@ -118,6 +120,8 @@ MqttBridge.subscribe({ topic, qos })
     console.log('Failed to subscribe to topic. Error:', errorMessage);
   });
 ```
+
+<a name="publish-to-topic"></a>
 
 ### Publishing a Message to an MQTT Topic :
 
@@ -149,6 +153,8 @@ MqttBridge.publish({ topic, payload, qos, retained })
   });
 ```
 
+<a name="message-arrived-event"></a>
+
 ### Listen to Incoming Messages :
 
 To listen to incoming messages, you can add a CapacitorJS listener with this event name : `onMessageArrived`. The following code demonstrates how to publish a message to an MQTT topic:
@@ -166,6 +172,8 @@ MqttBridge.addListener('onMessageArrived', (result: any) => {
 
 When a message arrives, the listener will be triggered and you can access the message topic and payload in the result parameter. You can modify the code to suit your use case and do something more interesting with the incoming messages.
 
+<a name="connect-complete-event"></a>
+
 ### Listen to ConnectComplete Event :
 
 This event is triggered only when the connection to the MQTT broker is successfully completed. It also triggers when the client was reconnected after a connection loss. To implement this, you can add a CapacitorJS listener with the event name : `onConnectComplete`. The following code demonstrates how to listen to the ConnectComplete event:
@@ -180,6 +188,8 @@ MqttBridge.addListener('onConnectComplete', (result: any) => {
   console.log('Server URI:', result.serverURI);
 });
 ```
+
+<a name="connection-lost-event"></a>
 
 ### Listen to ConnectionLost Event :
 
@@ -199,9 +209,9 @@ MqttBridge.addListener('onConnectionLost', (result: any) => {
 
 The event listener function receives an object result as an argument with the following properties:
 
-- connectionStatus: _The status of the connection at the time the event was triggered._
-- reasonCode: _The MQTT reason code for the connection loss._
-- message: _Additional information about the connection loss._
+- **connectionStatus:** The status of the connection at the time the event was triggered.
+- **reasonCode:** The MQTT reason code for the connection loss.
+- **message:** Additional information about the connection loss.
 
 #
 
