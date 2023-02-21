@@ -26,9 +26,6 @@ public class MqttBridge implements MqttCallbackExtended {
     // A constant string used as a tag for logging
     private static final String TAG = "MqttBridge";
 
-    // A constant integer value representing the Quality of Service (QoS) for MQTT messages
-    private static final int QOS = 1;
-
     // An instance of the MqttBridgePlugin class
     private MqttBridgePlugin pluginInstance;
 
