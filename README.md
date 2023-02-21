@@ -19,6 +19,7 @@ npx cap sync
 * [`publish(...)`](#publish)
 * [`addListener('onConnectionLost', ...)`](#addlisteneronconnectionlost)
 * [`addListener('onConnectComplete', ...)`](#addlisteneronconnectcomplete)
+* [`addListener('onMessageArrived', ...)`](#addlisteneronmessagearrived)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 
@@ -56,14 +57,14 @@ disconnect() => Promise<any>
 ### subscribe(...)
 
 ```typescript
-subscribe(options: { topic: string; qos: number; }) => Promise<any>
+subscribe(options: { topic: string; qos: number; }) => Promise<{ topic: string; qos: number; }>
 ```
 
 | Param         | Type                                         |
 | ------------- | -------------------------------------------- |
 | **`options`** | <code>{ topic: string; qos: number; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>Promise&lt;{ topic: string; qos: number; }&gt;</code>
 
 --------------------
 
@@ -71,14 +72,14 @@ subscribe(options: { topic: string; qos: number; }) => Promise<any>
 ### publish(...)
 
 ```typescript
-publish(options: { topic: string; qos: number; retained: boolean; }) => Promise<any>
+publish(options: { topic: string; payload: string; qos: number; retained: boolean; }) => Promise<{ topic: string; payload: string; qos: number; retained: boolean; messageId: any; }>
 ```
 
-| Param         | Type                                                            |
-| ------------- | --------------------------------------------------------------- |
-| **`options`** | <code>{ topic: string; qos: number; retained: boolean; }</code> |
+| Param         | Type                                                                             |
+| ------------- | -------------------------------------------------------------------------------- |
+| **`options`** | <code>{ topic: string; payload: string; qos: number; retained: boolean; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>Promise&lt;{ topic: string; payload: string; qos: number; retained: boolean; messageId: any; }&gt;</code>
 
 --------------------
 
@@ -115,6 +116,22 @@ addListener(eventName: 'onConnectComplete', listener: onConnectCompleteListener)
 --------------------
 
 
+### addListener('onMessageArrived', ...)
+
+```typescript
+addListener(eventName: 'onMessageArrived', listener: onMessageArrivedListener) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+| Param           | Type                                                                          |
+| --------------- | ----------------------------------------------------------------------------- |
+| **`eventName`** | <code>'onMessageArrived'</code>                                               |
+| **`listener`**  | <code><a href="#onmessagearrivedlistener">onMessageArrivedListener</a></code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
 ### Interfaces
 
 
@@ -136,5 +153,10 @@ addListener(eventName: 'onConnectComplete', listener: onConnectCompleteListener)
 #### onConnectCompleteListener
 
 <code>(x: { reconnected: boolean; serverURI: string; }): void</code>
+
+
+#### onMessageArrivedListener
+
+<code>(x: { topic: string; message: string; }): void</code>
 
 </docgen-api>

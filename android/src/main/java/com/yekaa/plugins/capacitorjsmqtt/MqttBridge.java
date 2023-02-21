@@ -67,7 +67,6 @@ public class MqttBridge implements MqttCallbackExtended {
         this.pluginInstance = pluginInstance;
     }
 
-
     public void connect(final PluginCall call) {
         // Extract necessary information from the PluginCall data
         JSObject dataFromPluginCall = call.getData();
@@ -234,7 +233,7 @@ public class MqttBridge implements MqttCallbackExtended {
 
         try {
             // Create an MqttMessage object with the payload
-            MqttMessage message = new MqttMessage(payload.getBytes());
+            MqttMessage message = new MqttMessage(payload.getBytes(StandardCharsets.UTF_8));
             // Set the qos and retained flag of the message
             message.setQos(qos);
             message.setRetained(retained);
@@ -265,7 +264,6 @@ public class MqttBridge implements MqttCallbackExtended {
             call.reject("Failed to publish message to topic: " + topic);
         }
     }
-
 
     @Override
     public void connectComplete(boolean reconnect, String serverURI) {
@@ -310,7 +308,6 @@ public class MqttBridge implements MqttCallbackExtended {
         Log.d("MQTT", message);
     }
 
-
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         // Create a JSObject to hold the message data
@@ -326,8 +323,5 @@ public class MqttBridge implements MqttCallbackExtended {
     }
 
     @Override
-    public void deliveryComplete(IMqttDeliveryToken token) {
-
-
-    }
+    public void deliveryComplete(IMqttDeliveryToken token) {}
 }
