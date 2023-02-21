@@ -1,12 +1,12 @@
 # CapacitorJS MQTT Native Plugin
 
-⚡️This is an easy-to-use CapacitorJS plugin that enables your CapacitorJS-powered Android mobile app to connect to an MQTT broker and send/receive messages. With this plugin, you can easily implement MQTT-based communication in your Android CapacitorJS app natively.
+⚡️ This plugin enables CapacitorJS-powered Android mobile apps to connect to an MQTT broker and send/receive messages natively.
 
-### Support for iOS is currently in development and will be added soon.
-
-#
+#### ⚠️ Note: Support for iOS is currently in development and will be added soon.
 
 ## Installation
+
+To install the plugin, run:
 
 ```bash
 npm install capacitorjs-mqtt-bridge
@@ -26,7 +26,7 @@ import { MqttBridge } from '@yekaa/capacitorjs-mqtt-native-plugin';
 
 // Set the MQTT server connection options
 const connectionOptions = {
-  serverURI: 'tcp://broker.hivemq.com', // MQTT broker URI
+  serverURI: 'tcp://', // MQTT broker URI
   port: 1883, // MQTT broker port
   clientId: '', // client ID for connection
   username: 'your_mqtt_broker_username', // MQTT broker username
@@ -35,13 +35,6 @@ const connectionOptions = {
   connectionTimeout: 30, // connection timeout in seconds
   keepAliveInterval: 60, // keep alive interval in seconds
   setAutomaticReconnect: true, // automatic reconnect option
-  // optional:
-  // setLastWill: {
-  // willTopic: null, //string
-  // willPayload: null, //string
-  // willQoS: null, //number
-  // setRetained: null, //boolean
-  // }
 };
 
 // connect to MQTT broker with options
@@ -54,6 +47,17 @@ MqttBridge.connect(connectionOptions)
     // connection failed with error message
     console.log('Connect Failed:', error);
   });
+```
+
+you can also add optional connect options parameter like `lastWill` to the `connectOptions`:
+
+```typescript
+  setLastWill: {
+    willTopic: "your_last_will_topic",
+    willPayload: "your_last_will_message",
+    willQoS: "your_last_will_QoS",
+    setRetained: false,
+  }
 ```
 
 ### Disconnecting from the MQTT Broker :
@@ -150,6 +154,7 @@ MqttBridge.addListener('onMessageArrived', (result: any) => {
   console.log('Message:', result.message);
 });
 ```
+
 When a message arrives, the listener will be triggered and you can access the message topic and payload in the result parameter. You can modify the code to suit your use case and do something more interesting with the incoming messages.
 
 ### Listen to ConnectComplete Event :
@@ -182,11 +187,13 @@ MqttBridge.addListener('onConnectionLost', (result: any) => {
   console.log('Message:', result.message);
 });
 ```
+
 The event listener function receives an object result as an argument with the following properties:
 
-- connectionStatus: *The status of the connection at the time the event was triggered.*
-- reasonCode: *The reason code for the connection loss.*
-- message: *Additional information about the connection loss.*
+- connectionStatus: _The status of the connection at the time the event was triggered._
+- reasonCode: _The MQTT reason code for the connection loss._
+- message: _Additional information about the connection loss._
+
 #
 
 ## API
