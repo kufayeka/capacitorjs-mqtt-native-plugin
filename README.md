@@ -9,7 +9,7 @@
 To install the plugin, run:
 
 ```bash
-npm install capacitorjs-mqtt-bridge
+npm install capacitor-mqtt-native-plugin
 npx cap sync
 ```
 
