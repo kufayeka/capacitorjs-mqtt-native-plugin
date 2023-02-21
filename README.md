@@ -25,16 +25,16 @@ To connect to an MQTT broker, you can use the `connect()` method provided by the
 import { MqttBridge } from '@yekaa/capacitorjs-mqtt-native-plugin';
 
 // Set the MQTT server connection options
-const connectOptions = {
-  serverURI: 'tcp://broker.hivemq.com',
-  port: 1883,
-  clientId: '',
-  username: 'your_mqtt_broker_username',
-  password: 'your_mqtt_broker_password',
-  setCleanSession: true,
-  connectionTimeout: 30,
-  keepAliveInterval: 60,
-  setAutomaticReconnect: true,
+const connectionOptions = {
+  serverURI: 'tcp://broker.hivemq.com', // MQTT broker URI
+  port: 1883, // MQTT broker port
+  clientId: '', // client ID for connection
+  username: 'your_mqtt_broker_username', // MQTT broker username
+  password: 'your_mqtt_broker_password', // MQTT broker password
+  setCleanSession: true, // clean session option
+  connectionTimeout: 30, // connection timeout in seconds
+  keepAliveInterval: 60, // keep alive interval in seconds
+  setAutomaticReconnect: true, // automatic reconnect option
   // optional:
   // setLastWill: {
   // willTopic: null, //string
@@ -44,11 +44,14 @@ const connectOptions = {
   // }
 };
 
-MqttBridge.connect(connectOptions)
+// connect to MQTT broker with options
+MqttBridge.connect(connectionOptions)
   .then(() => {
+    // connection successful
     console.log('Connect Success');
   })
   .catch((error: any) => {
+    // connection failed with error message
     console.log('Connect Failed:', error);
   });
 ```
@@ -60,12 +63,18 @@ To disconnect from the MQTT broker, you can use the `disconnect()` method provid
 ```typescript
 import { MqttBridge } from '@yekaa/capacitorjs-mqtt-native-plugin';
 
+// Disconnect from the MQTT broker
 MqttBridge.disconnect()
   .then(() => {
-    console.log('Disconnect Success');
+    // The disconnection is successful
+    console.log('Successfully disconnected from the MQTT broker');
   })
-  .catch((error: any) => {
-    console.log('Disconnect Failed:', error);
+  .catch((errorMessage: any) => {
+    // The disconnection fails
+    console.log(
+      'Failed to disconnect from the MQTT broker. Error:',
+      errorMessage,
+    );
   });
 ```
 
@@ -76,12 +85,24 @@ To subscribe to an MQTT topic, you can use the `subscribe()` method provided by 
 ```typescript
 import { MqttBridge } from '@yekaa/capacitorjs-mqtt-native-plugin';
 
-MqttBridge.subscribe({ topic: 'your_mqtt_topic', qos: 0 })
+// Define the topic, qos
+const topic = 'your_mqtt_topic';
+const qos = 0;
+
+// Subscribe to an MQTT topic
+MqttBridge.subscribe({
+  topic: 'your_mqtt_topic',
+  qos: 0,
+})
+  // The subscription is successful
   .then((result: any) => {
-    console.log('Subscribe Success:', result.topic, result.qos);
+    console.log('Successfully subscribed to topic:');
+    console.log('Topic:', result.topic);
+    console.log('QoS:', result.qos);
   })
-  .catch((error: any) => {
-    console.log('Subscribe Failed:', error);
+  // The subscription fails
+  .catch((errorMessage: any) => {
+    console.log('Failed to subscribe to topic. Error:', errorMessage);
   });
 ```
 
@@ -92,24 +113,26 @@ To publish a message to an MQTT topic, you can use the `publish()` method provid
 ```typescript
 import { MqttBridge } from '@yekaa/capacitorjs-mqtt-native-plugin';
 
-MqttBridge.publish({
-  topic: 'your_mqtt_topic',
-  payload: 'your_mqtt_message',
-  qos: 0,
-  retained: false,
-})
+// Define the topic, payload, qos, and retained properties for the message
+const topic = 'your_mqtt_topic';
+const payload = 'your_mqtt_message';
+const qos = 0;
+const retained = false;
+
+// Publish the message
+MqttBridge.publish({ topic, payload, qos, retained })
   .then((result: any) => {
-    console.log(
-      'Publish Success:',
-      result.topic,
-      result.qos,
-      result.payload,
-      result.retained,
-      result.messageId,
-    );
+    // The message is published successfully
+    console.log('Successfully published message:');
+    console.log('Topic:', result.topic);
+    console.log('QoS:', result.qos);
+    console.log('Payload:', result.payload);
+    console.log('Retained:', result.retained);
+    console.log('Message ID:', result.messageId);
   })
-  .catch((error: any) => {
-    console.log('Publish Failed:', error);
+  .catch((errorMessage: any) => {
+    // The message fails to publish
+    console.log('Failed to publish message. Error:', errorMessage);
   });
 ```
 
@@ -120,43 +143,50 @@ To listen to incoming messages, you can add a CapacitorJS listener with this eve
 ```typescript
 import { MqttBridge } from '@yekaa/capacitorjs-mqtt-native-plugin';
 
+// Listen to incoming MQTT messages
 MqttBridge.addListener('onMessageArrived', (result: any) => {
-  console.log('onMessageArrived:', result.topic, result.message);
+  console.log('Received a new message:');
+  console.log('Topic:', result.topic);
+  console.log('Message:', result.message);
 });
 ```
+When a message arrives, the listener will be triggered and you can access the message topic and payload in the result parameter. You can modify the code to suit your use case and do something more interesting with the incoming messages.
 
-### Listen to ConnectComplete Callback :
+### Listen to ConnectComplete Event :
 
-This event only triggered when the connection to the server is completed successfully. It also triggered when the client was reconnected after a connection lost happened. To implement this, You can add a CapacitorJS listener with this event name : `onConnectComplete`. The following code demonstrates how to listen to ConnectComplete Callback:
+This event is triggered only when the connection to the MQTT broker is successfully completed. It also triggers when the client was reconnected after a connection loss. To implement this, you can add a CapacitorJS listener with the event name onConnectComplete. The following code demonstrates how to listen to the ConnectComplete event:
 
 ```typescript
 import { MqttBridge } from '@yekaa/capacitorjs-mqtt-native-plugin';
 
+// Listen for the 'onConnectComplete' event
 MqttBridge.addListener('onConnectComplete', (result: any) => {
-  console.log('onConnectComplete:', result.reconnected, result.serverURI);
+  console.log('Successfully connected to MQTT broker:');
+  console.log('Reconnected:', result.reconnected);
+  console.log('Server URI:', result.serverURI);
 });
 ```
 
-### Listen to ConnectionLost Callback :
+### Listen to ConnectionLost Event :
 
-This event only triggered when the connection to the server is lost. To implement this, You can add a CapacitorJS listener with this event name : `onConnectionLost`. The following code demonstrates how to listen to ConnectionLost Callback:
+This event is triggered only when the client loses the connection to the MQTT broker. To handle this event, you can add a CapacitorJS listener with the event name onConnectionLost. The following code demonstrates how to listen to ConnectionLost event:
 
 ```typescript
 import { MqttBridge } from '@yekaa/capacitorjs-mqtt-native-plugin';
 
-MqttBridge.addListener(
-  'onConnectionLost',
-  (result: { connectionStatus: any; reasonCode: any; message: any }) => {
-    console.log(
-      'onConnectionLost:',
-      result.connectionStatus,
-      result.reasonCode,
-      result.message,
-    );
-  },
-);
+// Add a listener for when the connection is lost
+MqttBridge.addListener('onConnectionLost', (result: any) => {
+  console.log('Connection lost:');
+  console.log('Connection status:', result.connectionStatus);
+  console.log('Reason code:', result.reasonCode);
+  console.log('Message:', result.message);
+});
 ```
+The event listener function receives an object result as an argument with the following properties:
 
+- connectionStatus: *The status of the connection at the time the event was triggered.*
+- reasonCode: *The reason code for the connection loss.*
+- message: *Additional information about the connection loss.*
 #
 
 ## API
