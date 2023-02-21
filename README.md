@@ -17,8 +17,6 @@ npx cap sync
 
 Here are some examples of how to use the plugin in your capacitorJS project using Typescript:
 
-<docgen-index>
-
 - [`Connect to an MQTT Broker`](#connect-to-an-mqtt-broker)
 - [`Disconnecting from the MQTT Broker`](#disconnecting-from-the-mqtt-broker)
 - [`Subscribing to an MQTT Topic`](#subscribing-to-an-mqtt-topic)
