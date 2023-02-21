@@ -17,6 +17,16 @@ npx cap sync
 
 Here are some examples of how to use the plugin in your capacitorJS project using Typescript:
 
+<docgen-index>
+
+- [`Connect to an MQTT Broker`](#connect-to-an-mqtt-broker)
+- [`Disconnecting from the MQTT Broker`](#disconnecting-from-the-mqtt-broker)
+- [`Subscribing to an MQTT Topic`](#subscribing-to-an-mqtt-topic)
+- [`Publishing a Message to an MQTT Topic`](#publishing-a-message-to-an-mqtt-topic)
+- [`Listen to Incoming Messages`](#listen-to-incoming-messages)
+- [`Listen to ConnectComplete Event`](#listen-to-connectcomplete-event)
+- [`Listen to ConnectionLost Event`](#listen-to-connectionlost-event)
+
 ### Connect to an MQTT Broker :
 
 To connect to an MQTT broker, you can use the `connect()` method provided by the plugin. The following code demonstrates how to connect to an MQTT broker:
@@ -156,7 +166,7 @@ When a message arrives, the listener will be triggered and you can access the me
 
 ### Listen to ConnectComplete Event :
 
-This event is triggered only when the connection to the MQTT broker is successfully completed. It also triggers when the client was reconnected after a connection loss. To implement this, you can add a CapacitorJS listener with the event name onConnectComplete. The following code demonstrates how to listen to the ConnectComplete event:
+This event is triggered only when the connection to the MQTT broker is successfully completed. It also triggers when the client was reconnected after a connection loss. To implement this, you can add a CapacitorJS listener with the event name : `onConnectComplete`. The following code demonstrates how to listen to the ConnectComplete event:
 
 ```typescript
 import { MqttBridge } from 'capacitor-mqtt-native-plugin';
@@ -171,7 +181,7 @@ MqttBridge.addListener('onConnectComplete', (result: any) => {
 
 ### Listen to ConnectionLost Event :
 
-This event is triggered only when the client loses the connection to the MQTT broker. To handle this event, you can add a CapacitorJS listener with the event name onConnectionLost. The following code demonstrates how to listen to ConnectionLost event:
+This event is triggered only when the client loses the connection to the MQTT broker. To handle this event, you can add a CapacitorJS listener with the event name : `onConnectionLost`. The following code demonstrates how to listen to ConnectionLost event:
 
 ```typescript
 import { MqttBridge } from 'capacitor-mqtt-native-plugin';
