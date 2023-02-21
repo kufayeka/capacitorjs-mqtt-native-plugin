@@ -13,12 +13,12 @@ npx cap sync
 
 <docgen-index>
 
-* [`mqttConnect(...)`](#mqttconnect)
-* [`mqttDisconnect()`](#mqttdisconnect)
-* [`mqttPublish(...)`](#mqttpublish)
-* [`mqttSubscribe(...)`](#mqttsubscribe)
-* [`addListener('mqttConnection', ...)`](#addlistenermqttconnection)
-* [`addListener('messageArrived', ...)`](#addlistenermessagearrived)
+* [`connect(...)`](#connect)
+* [`disconnect()`](#disconnect)
+* [`subscribe(...)`](#subscribe)
+* [`publish(...)`](#publish)
+* [`addListener('onConnectionLost', ...)`](#addlisteneronconnectionlost)
+* [`addListener('onConnectComplete', ...)`](#addlisteneronconnectcomplete)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 
@@ -27,80 +27,88 @@ npx cap sync
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
-### mqttConnect(...)
+### connect(...)
 
 ```typescript
-mqttConnect(mqttOpt: { serverURI: string; port: number; }) => void
+connect(options: { serverURI: string; port: number; clientId: string; username: string; password: string; setCleanSession: boolean; connectionTimeout: number; keepAliveInterval: number; setAutomaticReconnect: boolean; setLastWill?: { willTopic: string; willPayload: string; willQoS: number; setRetained: boolean; }; }) => Promise<any>
 ```
 
-| Param         | Type                                              |
-| ------------- | ------------------------------------------------- |
-| **`mqttOpt`** | <code>{ serverURI: string; port: number; }</code> |
+| Param         | Type                                                                                                                                                                                                                                                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ serverURI: string; port: number; clientId: string; username: string; password: string; setCleanSession: boolean; connectionTimeout: number; keepAliveInterval: number; setAutomaticReconnect: boolean; setLastWill?: { willTopic: string; willPayload: string; willQoS: number; setRetained: boolean; }; }</code> |
+
+**Returns:** <code>Promise&lt;any&gt;</code>
 
 --------------------
 
 
-### mqttDisconnect()
+### disconnect()
 
 ```typescript
-mqttDisconnect() => void
+disconnect() => Promise<any>
 ```
+
+**Returns:** <code>Promise&lt;any&gt;</code>
 
 --------------------
 
 
-### mqttPublish(...)
+### subscribe(...)
 
 ```typescript
-mqttPublish(mqttPub: { topic: string; payload: string; qos: number; retained: boolean; }) => void
-```
-
-| Param         | Type                                                                             |
-| ------------- | -------------------------------------------------------------------------------- |
-| **`mqttPub`** | <code>{ topic: string; payload: string; qos: number; retained: boolean; }</code> |
-
---------------------
-
-
-### mqttSubscribe(...)
-
-```typescript
-mqttSubscribe(mqttSub: { topic: string; qos: number; }) => void
+subscribe(options: { topic: string; qos: number; }) => Promise<any>
 ```
 
 | Param         | Type                                         |
 | ------------- | -------------------------------------------- |
-| **`mqttSub`** | <code>{ topic: string; qos: number; }</code> |
+| **`options`** | <code>{ topic: string; qos: number; }</code> |
+
+**Returns:** <code>Promise&lt;any&gt;</code>
 
 --------------------
 
 
-### addListener('mqttConnection', ...)
+### publish(...)
 
 ```typescript
-addListener(eventName: 'mqttConnection', listener: mqttConnectionListener) => Promise<PluginListenerHandle> & PluginListenerHandle
+publish(options: { topic: string; qos: number; retained: boolean; }) => Promise<any>
 ```
 
-| Param           | Type                                                                      |
-| --------------- | ------------------------------------------------------------------------- |
-| **`eventName`** | <code>'mqttConnection'</code>                                             |
-| **`listener`**  | <code><a href="#mqttconnectionlistener">mqttConnectionListener</a></code> |
+| Param         | Type                                                            |
+| ------------- | --------------------------------------------------------------- |
+| **`options`** | <code>{ topic: string; qos: number; retained: boolean; }</code> |
+
+**Returns:** <code>Promise&lt;any&gt;</code>
+
+--------------------
+
+
+### addListener('onConnectionLost', ...)
+
+```typescript
+addListener(eventName: 'onConnectionLost', listener: onConnectionLostListener) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+| Param           | Type                                                                          |
+| --------------- | ----------------------------------------------------------------------------- |
+| **`eventName`** | <code>'onConnectionLost'</code>                                               |
+| **`listener`**  | <code><a href="#onconnectionlostlistener">onConnectionLostListener</a></code> |
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
 --------------------
 
 
-### addListener('messageArrived', ...)
+### addListener('onConnectComplete', ...)
 
 ```typescript
-addListener(eventName: 'messageArrived', listener: messageArrivedListener) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onConnectComplete', listener: onConnectCompleteListener) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param           | Type                                                                      |
-| --------------- | ------------------------------------------------------------------------- |
-| **`eventName`** | <code>'messageArrived'</code>                                             |
-| **`listener`**  | <code><a href="#messagearrivedlistener">messageArrivedListener</a></code> |
+| Param           | Type                                                                            |
+| --------------- | ------------------------------------------------------------------------------- |
+| **`eventName`** | <code>'onConnectComplete'</code>                                                |
+| **`listener`**  | <code><a href="#onconnectcompletelistener">onConnectCompleteListener</a></code> |
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
@@ -120,13 +128,13 @@ addListener(eventName: 'messageArrived', listener: messageArrivedListener) => Pr
 ### Type Aliases
 
 
-#### mqttConnectionListener
+#### onConnectionLostListener
 
-<code>(x: any): void</code>
+<code>(x: { connectionStatus: string; reasonCode: number; message: string; }): void</code>
 
 
-#### messageArrivedListener
+#### onConnectCompleteListener
 
-<code>(x: any): void</code>
+<code>(x: { reconnected: boolean; serverURI: string; }): void</code>
 
 </docgen-api>

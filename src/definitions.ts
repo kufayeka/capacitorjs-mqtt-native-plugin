@@ -1,29 +1,52 @@
 import type { PluginListenerHandle } from '@capacitor/core';
 
-export type mqttConnectionListener = (x: any) => void;
-export type messageArrivedListener = (x: any) => void;
+export type onConnectionLostListener = (x: {
+  connectionStatus: string;
+  reasonCode: number;
+  message: string;
+}) => void;
+
+export type onConnectCompleteListener = (x: {
+  reconnected: boolean;
+  serverURI: string;
+}) => void;
 
 export interface MqttBridgePlugin {
-  mqttConnect(mqttOpt: { serverURI: string; port: number }): void;
+  connect(options: {
+    serverURI: string;
+    port: number;
+    clientId: string;
+    username: string;
+    password: string;
+    setCleanSession: boolean;
+    connectionTimeout: number;
+    keepAliveInterval: number;
+    setAutomaticReconnect: boolean;
+    setLastWill?: {
+      willTopic: string;
+      willPayload: string;
+      willQoS: number;
+      setRetained: boolean;
+    };
+  }): Promise<any>;
 
-  mqttDisconnect(): void;
+  disconnect(): Promise<any>;
 
-  mqttPublish(mqttPub: {
+  subscribe(options: { topic: string; qos: number }): Promise<any>;
+
+  publish(options: {
     topic: string;
-    payload: string;
     qos: number;
     retained: boolean;
-  }): void;
-
-  mqttSubscribe(mqttSub: { topic: string; qos: number }): void;
+  }): Promise<any>;
 
   addListener(
-    eventName: 'mqttConnection',
-    listener: mqttConnectionListener,
+    eventName: 'onConnectionLost',
+    listener: onConnectionLostListener,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
-    eventName: 'messageArrived',
-    listener: messageArrivedListener,
+    eventName: 'onConnectComplete',
+    listener: onConnectCompleteListener,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 }
