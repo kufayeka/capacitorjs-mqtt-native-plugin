@@ -17,15 +17,17 @@ npx cap sync
 
 Here are some examples of how to use the plugin in your capacitorJS project using Typescript:
 
-- [`Connect to an MQTT Broker`](#connect-method)
-- [`Disconnecting from the MQTT Broker`](#disconnect-method]
-- [`Subscribing to an MQTT Topic`](#subscribe-method)
-- [`Publishing a Message to an MQTT Topic`](#publish-method)
+- [`Connect to an MQTT Broker`](#connect-to-broker)
+- [`Disconnecting from the MQTT Broker`](#disconnect-from-broker)
+- [`Subscribing to an MQTT Topic`](#subscribe-to-topic)
+- [`Publishing a Message to an MQTT Topic`](#publish-to-topic)
 - [`Listen to Incoming Messages`](#message-arrived-event)
 - [`Listen to ConnectComplete Event`](#connect-complete-event)
 - [`Listen to ConnectionLost Event`](#listen-to-connectionlost-event)
 
-### Connect to an MQTT Broker : {#connect-method}
+<a name="connect-to-broker"></a>
+
+### Connect to an MQTT Broker :
 
 To connect to an MQTT broker, you can use the `connect()` method provided by the plugin. The following code demonstrates how to connect to an MQTT broker:
 
@@ -68,7 +70,9 @@ you can also add optional connect options parameter like `lastWill` to the `conn
   }
 ```
 
-### Disconnecting from the MQTT Broker : {#disconnect-method}
+<a name="#disconnect-from-broker"></a>
+
+### Disconnecting from the MQTT Broker :
 
 To disconnect from the MQTT broker, you can use the `disconnect()` method provided by the plugin. The following code demonstrates how to disconnect from an MQTT broker:
 
@@ -90,7 +94,7 @@ MqttBridge.disconnect()
   });
 ```
 
-### Subscribing to an MQTT Topic : {#subscribe-method}
+### Subscribing to an MQTT Topic :
 
 To subscribe to an MQTT topic, you can use the `subscribe()` method provided by the plugin. The following code demonstrates how to subscribe to an MQTT topic:
 
@@ -115,7 +119,7 @@ MqttBridge.subscribe({ topic, qos })
   });
 ```
 
-### Publishing a Message to an MQTT Topic : {#publish-method}
+### Publishing a Message to an MQTT Topic :
 
 To publish a message to an MQTT topic, you can use the `publish()` method provided by the plugin. The following code demonstrates how to publish a message to an MQTT topic:
 
@@ -145,7 +149,7 @@ MqttBridge.publish({ topic, payload, qos, retained })
   });
 ```
 
-### Listen to Incoming Messages : {#message-arrived-event}
+### Listen to Incoming Messages :
 
 To listen to incoming messages, you can add a CapacitorJS listener with this event name : `onMessageArrived`. The following code demonstrates how to publish a message to an MQTT topic:
 
@@ -162,7 +166,7 @@ MqttBridge.addListener('onMessageArrived', (result: any) => {
 
 When a message arrives, the listener will be triggered and you can access the message topic and payload in the result parameter. You can modify the code to suit your use case and do something more interesting with the incoming messages.
 
-### Listen to ConnectComplete Event : {#connect-complete-event}
+### Listen to ConnectComplete Event :
 
 This event is triggered only when the connection to the MQTT broker is successfully completed. It also triggers when the client was reconnected after a connection loss. To implement this, you can add a CapacitorJS listener with the event name : `onConnectComplete`. The following code demonstrates how to listen to the ConnectComplete event:
 
@@ -177,7 +181,7 @@ MqttBridge.addListener('onConnectComplete', (result: any) => {
 });
 ```
 
-### Listen to ConnectionLost Event : {#connection-lost-event}
+### Listen to ConnectionLost Event :
 
 This event is triggered only when the client loses the connection to the MQTT broker. To handle this event, you can add a CapacitorJS listener with the event name : `onConnectionLost`. The following code demonstrates how to listen to ConnectionLost event:
 
