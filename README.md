@@ -1,6 +1,6 @@
 # CapacitorJS MQTT Native Plugin
 
-⚡️ This plugin enables CapacitorJS-powered Android mobile apps to connect to an MQTT broker and send/receive messages natively.
+⚡️ This plugin enables CapacitorJS-powered Android mobile apps to connect to an MQTT broker and send/receive messages natively using TCP protocol.
 
 #### ⚠️ Note: Supports only for android for now.
 
@@ -219,15 +219,15 @@ The event listener function receives an object result as an argument with the fo
 
 <docgen-index>
 
-* [`connect(...)`](#connect)
-* [`disconnect()`](#disconnect)
-* [`subscribe(...)`](#subscribe)
-* [`publish(...)`](#publish)
-* [`addListener('onConnectionLost', ...)`](#addlisteneronconnectionlost)
-* [`addListener('onConnectComplete', ...)`](#addlisteneronconnectcomplete)
-* [`addListener('onMessageArrived', ...)`](#addlisteneronmessagearrived)
-* [Interfaces](#interfaces)
-* [Type Aliases](#type-aliases)
+- [`connect(...)`](#connect)
+- [`disconnect()`](#disconnect)
+- [`subscribe(...)`](#subscribe)
+- [`publish(...)`](#publish)
+- [`addListener('onConnectionLost', ...)`](#addlisteneronconnectionlost)
+- [`addListener('onConnectComplete', ...)`](#addlisteneronconnectcomplete)
+- [`addListener('onMessageArrived', ...)`](#addlisteneronmessagearrived)
+- [Interfaces](#interfaces)
+- [Type Aliases](#type-aliases)
 
 </docgen-index>
 
@@ -246,8 +246,7 @@ connect(options: { serverURI: string; port: number; clientId: string; username: 
 
 **Returns:** <code>Promise&lt;any&gt;</code>
 
---------------------
-
+---
 
 ### disconnect()
 
@@ -257,8 +256,7 @@ disconnect() => Promise<any>
 
 **Returns:** <code>Promise&lt;any&gt;</code>
 
---------------------
-
+---
 
 ### subscribe(...)
 
@@ -272,8 +270,7 @@ subscribe(options: { topic: string; qos: number; }) => Promise<{ topic: string; 
 
 **Returns:** <code>Promise&lt;{ topic: string; qos: number; }&gt;</code>
 
---------------------
-
+---
 
 ### publish(...)
 
@@ -287,8 +284,7 @@ publish(options: { topic: string; payload: string; qos: number; retained: boolea
 
 **Returns:** <code>Promise&lt;{ topic: string; payload: string; qos: number; retained: boolean; messageId: any; }&gt;</code>
 
---------------------
-
+---
 
 ### addListener('onConnectionLost', ...)
 
@@ -303,8 +299,7 @@ addListener(eventName: 'onConnectionLost', listener: onConnectionLostListener) =
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
---------------------
-
+---
 
 ### addListener('onConnectComplete', ...)
 
@@ -319,8 +314,7 @@ addListener(eventName: 'onConnectComplete', listener: onConnectCompleteListener)
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
---------------------
-
+---
 
 ### addListener('onMessageArrived', ...)
 
@@ -335,11 +329,9 @@ addListener(eventName: 'onMessageArrived', listener: onMessageArrivedListener) =
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
---------------------
-
+---
 
 ### Interfaces
-
 
 #### PluginListenerHandle
 
@@ -347,19 +339,15 @@ addListener(eventName: 'onMessageArrived', listener: onMessageArrivedListener) =
 | ------------ | ----------------------------------------- |
 | **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
-
 ### Type Aliases
-
 
 #### onConnectionLostListener
 
 <code>(x: { connectionStatus: string; reasonCode: number; message: string; }): void</code>
 
-
 #### onConnectCompleteListener
 
 <code>(x: { reconnected: boolean; serverURI: string; }): void</code>
-
 
 #### onMessageArrivedListener
 
