@@ -1,13 +1,12 @@
 package com.yekaa.plugins.capacitorjsmqtt;
 
-import com.yekaa.plugins.capacitorjsmqtt.Constants;
-
 import android.content.Context;
 import android.util.Log;
-
 import com.getcapacitor.JSObject;
 import com.getcapacitor.PluginCall;
-
+import com.yekaa.plugins.capacitorjsmqtt.Constants;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -18,8 +17,6 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.json.JSONException;
-
-import java.nio.charset.StandardCharsets;
 
 public class MqttBridge implements MqttCallbackExtended {
 
@@ -68,7 +65,7 @@ public class MqttBridge implements MqttCallbackExtended {
         // Extract necessary information from the PluginCall data
         JSObject dataFromPluginCall = call.getData();
         String serverURI = dataFromPluginCall.getString("serverURI");
-        int port = dataFromPluginCall.getInteger("port");
+        String port = dataFromPluginCall.getString("port");
         String clientId = dataFromPluginCall.getString("clientId");
         String username = dataFromPluginCall.getString("username");
         String password = dataFromPluginCall.getString("password");
@@ -84,17 +81,29 @@ public class MqttBridge implements MqttCallbackExtended {
             call.reject("serverURI is required");
             return;
         }
+
+        if (port == null || port.isEmpty()) {
+            call.reject("port number is required");
+            return;
+        }
+
+        if (connectionTimeout == 0) {
+            call.reject(
+                "Invalid connection timeout value. Please provide a non-zero value, otherwise your MQTT client connection cannot be established."
+            );
+            return;
+        }
+
+        if (keepAliveInterval == 0) {
+            call.reject(
+                "Invalid keep alive interval value. Please provide a non-zero value, otherwise your MQTT client connection may timeout or disconnect unexpectedly."
+            );
+            return;
+        }
+
+        // If clientId is null or empty, generate a random clientId
         if (clientId == null || clientId.isEmpty()) {
-            call.reject("clientId is required");
-            return;
-        }
-        if (username == null || username.isEmpty()) {
-            call.reject("username is required");
-            return;
-        }
-        if (password == null || password.isEmpty()) {
-            call.reject("password is required");
-            return;
+            clientId = UUID.randomUUID().toString();
         }
 
         // Construct the full server URI
@@ -131,35 +140,39 @@ public class MqttBridge implements MqttCallbackExtended {
 
             try {
                 // Attempt to connect to the MQTT broker using the provided options
-                mqttClient.connect(mqttConnectOptions, context, new IMqttActionListener() {
-                    @Override
-                    public void onSuccess(IMqttToken asyncActionToken) {
-                        // Set isConnecting to false to allow future connect requests
-                        isConnecting = false;
-                        // Resolve the PluginCall to signal successful connection
-                        call.resolve();
+                mqttClient.connect(
+                    mqttConnectOptions,
+                    context,
+                    new IMqttActionListener() {
+                        @Override
+                        public void onSuccess(IMqttToken asyncActionToken) {
+                            // Set isConnecting to false to allow future connect requests
+                            isConnecting = false;
+                            // Resolve the PluginCall to signal successful connection
+                            call.resolve();
+                        }
+
+                        @Override
+                        public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                            // set isConnecting to false to indicate that the connection attempt has failed
+                            isConnecting = false;
+
+                            // Get the error message from the Throwable object
+                            String errorMessage = exception.getMessage();
+
+                            // Reject the plugin call with an error message containing the error message obtained from the Throwable object
+                            call.reject("Failed to connect to MQTT broker: " + errorMessage);
+                        }
                     }
-
-                    @Override
-                    public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                        // set isConnecting to false to indicate that the connection attempt has failed
-                        isConnecting = false;
-
-                        // Get the error message from the Throwable object
-                        String errorMessage = exception.getMessage();
-
-                        // Reject the plugin call with an error message containing the error message obtained from the Throwable object
-                        call.reject("Failed to connect to MQTT broker: " + errorMessage);
-                    }
-                });
+                );
             } catch (MqttException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void disconnect(final PluginCall call){
-        if(mqttClient.isConnected()){
+    public void disconnect(final PluginCall call) {
+        if (mqttClient.isConnected()) {
             try {
                 mqttClient.disconnect();
 
@@ -172,7 +185,6 @@ public class MqttBridge implements MqttCallbackExtended {
     }
 
     public void subscribe(final PluginCall call) {
-
         // Check if MQTT client is connected
         if (mqttClient == null || !mqttClient.isConnected()) {
             call.reject("MQTT client is not connected");
@@ -185,31 +197,32 @@ public class MqttBridge implements MqttCallbackExtended {
 
         try {
             // Subscribe to the MQTT topic with the given qos
-            mqttClient.subscribe(topic, qos, null, new IMqttActionListener() {
+            mqttClient.subscribe(
+                topic,
+                qos,
+                null,
+                new IMqttActionListener() {
+                    // This method is called when the subscription is successful
+                    @Override
+                    public void onSuccess(IMqttToken asyncActionToken) {
+                        // Create a JSObject to return the subscribed topic and qos
+                        JSObject data = new JSObject();
+                        data.put("topic", topic);
+                        data.put("qos", qos);
 
-                // This method is called when the subscription is successful
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
+                        // Resolve the plugin call with the data object
+                        call.resolve(data);
+                    }
 
-                    // Create a JSObject to return the subscribed topic and qos
-                    JSObject data = new JSObject();
-                    data.put("topic", topic);
-                    data.put("qos", qos);
-
-                    // Resolve the plugin call with the data object
-                    call.resolve(data);
+                    // This method is called when the subscription fails
+                    @Override
+                    public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                        // Reject the plugin call with an error message
+                        call.reject("Failed to subscribe to topic: " + topic);
+                    }
                 }
-
-                // This method is called when the subscription fails
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-
-                    // Reject the plugin call with an error message
-                    call.reject("Failed to subscribe to topic: " + topic);
-                }
-            });
+            );
         } catch (MqttException ex) {
-
             // Reject the plugin call with an error message
             call.reject("Failed to subscribe to topic: " + topic);
         }
@@ -236,26 +249,31 @@ public class MqttBridge implements MqttCallbackExtended {
             message.setRetained(retained);
 
             // Publish the message to the topic using the mqttClient object
-            mqttClient.publish(topic, message, null, new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
-                    // Construct a JSObject with the topic, qos, retained, payload, and messageId
-                    JSObject data = new JSObject();
-                    data.put("topic", topic);
-                    data.put("qos", qos);
-                    data.put("retained", retained);
-                    data.put("payload", payload);
-                    data.put("messageId", asyncActionToken.getMessageId());
-                    // Resolve the PluginCall with the JSObject
-                    call.resolve(data);
-                }
+            mqttClient.publish(
+                topic,
+                message,
+                null,
+                new IMqttActionListener() {
+                    @Override
+                    public void onSuccess(IMqttToken asyncActionToken) {
+                        // Construct a JSObject with the topic, qos, retained, payload, and messageId
+                        JSObject data = new JSObject();
+                        data.put("topic", topic);
+                        data.put("qos", qos);
+                        data.put("retained", retained);
+                        data.put("payload", payload);
+                        data.put("messageId", asyncActionToken.getMessageId());
+                        // Resolve the PluginCall with the JSObject
+                        call.resolve(data);
+                    }
 
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    // Reject the PluginCall with an error message
-                    call.reject("Failed to publish message to topic: " + topic);
+                    @Override
+                    public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                        // Reject the PluginCall with an error message
+                        call.reject("Failed to publish message to topic: " + topic);
+                    }
                 }
-            });
+            );
         } catch (MqttException ex) {
             // Reject the PluginCall with an error message
             call.reject("Failed to publish message to topic: " + topic);

@@ -1,6 +1,6 @@
 # CapacitorJS MQTT Native Plugin
 
-⚡️ This plugin enables CapacitorJS-powered Android mobile apps to connect to an MQTT broker and send/receive messages natively using TCP protocol.
+⚡️ This plugin enabzles CapacitorJS-powered Android mobile apps to connect to an MQTT broker and send/receive messages natively using TCP protocol.
 
 #### ⚠️ Note: Supports only for android for now.
 
@@ -25,9 +25,7 @@ Here are some examples of how to use the plugin in your capacitorJS project usin
 - [`Listen to ConnectComplete Event`](#connect-complete-event)
 - [`Listen to ConnectionLost Event`](#connection-lost-event)
 
-<a name="connect-to-broker"></a>
-
-### Connect to an MQTT Broker :
+### Connect to an MQTT Broker : <a name="connect-to-broker"></a>
 
 To connect to an MQTT broker, you can use the `connect()` method provided by the plugin. The following code demonstrates how to connect to an MQTT broker:
 
@@ -37,8 +35,8 @@ import { MqttBridge } from 'capacitor-mqtt-native-plugin';
 // Set the MQTT server connection options
 const connectionOptions = {
   serverURI: 'tcp://', // MQTT broker URI
-  port: 1883, // MQTT broker port
-  clientId: '', // client ID for connection
+  port: 1883, // MQTT broker default port
+  clientId: 'your_mqtt_clientId', // client ID for connection
   username: 'your_mqtt_broker_username', // MQTT broker username
   password: 'your_mqtt_broker_password', // MQTT broker password
   setCleanSession: true, // clean session option
@@ -59,20 +57,18 @@ MqttBridge.connect(connectionOptions)
   });
 ```
 
-you can also add optional connect options parameter like `lastWill` to the `connectOptions`:
+you can also add optional connect options parameter: `lastWill` to the `connectOptions`:
 
 ```typescript
   setLastWill: {
     willTopic: "your_last_will_topic",
     willPayload: "your_last_will_message",
     willQoS: "your_last_will_QoS",
-    setRetained: false,
+    setRetained: true,
   }
 ```
 
-<a name="disconnect-from-broker"></a>
-
-### Disconnecting from the MQTT Broker :
+### Disconnecting from the MQTT Broker : <a name="disconnect-from-broker"></a>
 
 To disconnect from the MQTT broker, you can use the `disconnect()` method provided by the plugin. The following code demonstrates how to disconnect from an MQTT broker:
 
@@ -94,9 +90,7 @@ MqttBridge.disconnect()
   });
 ```
 
-<a name="subscribe-to-topic"></a>
-
-### Subscribing to an MQTT Topic :
+### Subscribing to an MQTT Topic : <a name="#subscribe-to-topic"></a>
 
 To subscribe to an MQTT topic, you can use the `subscribe()` method provided by the plugin. The following code demonstrates how to subscribe to an MQTT topic:
 
@@ -121,9 +115,7 @@ MqttBridge.subscribe({ topic, qos })
   });
 ```
 
-<a name="publish-to-topic"></a>
-
-### Publishing a Message to an MQTT Topic :
+### Publishing a Message to an MQTT Topic : <a name="publish-to-topic"></a>
 
 To publish a message to an MQTT topic, you can use the `publish()` method provided by the plugin. The following code demonstrates how to publish a message to an MQTT topic:
 
@@ -153,9 +145,7 @@ MqttBridge.publish({ topic, payload, qos, retained })
   });
 ```
 
-<a name="message-arrived-event"></a>
-
-### Listen to Incoming Messages :
+### Listen to Incoming Messages : <a name="message-arrived-event"></a>
 
 To listen to incoming messages, you can add a CapacitorJS listener with this event name : `onMessageArrived`. The following code demonstrates how to publish a message to an MQTT topic:
 
@@ -172,9 +162,7 @@ MqttBridge.addListener('onMessageArrived', (result: any) => {
 
 When a message arrives, the listener will be triggered and you can access the message topic and payload in the result parameter. You can modify the code to suit your use case and do something more interesting with the incoming messages.
 
-<a name="connect-complete-event"></a>
-
-### Listen to ConnectComplete Event :
+### Listen to ConnectComplete Event : <a name="connect-complete-event"></a>
 
 This event is triggered only when the connection to the MQTT broker is successfully completed. It also triggers when the client was reconnected after a connection loss. To implement this, you can add a CapacitorJS listener with the event name : `onConnectComplete`. The following code demonstrates how to listen to the ConnectComplete event:
 
@@ -189,9 +177,7 @@ MqttBridge.addListener('onConnectComplete', (result: any) => {
 });
 ```
 
-<a name="connection-lost-event"></a>
-
-### Listen to ConnectionLost Event :
+### Listen to ConnectionLost Event : <a name="connection-lost-event"></a>
 
 This event is triggered only when the client loses the connection to the MQTT broker. To handle this event, you can add a CapacitorJS listener with the event name : `onConnectionLost`. The following code demonstrates how to listen to ConnectionLost event:
 
@@ -219,15 +205,15 @@ The event listener function receives an object result as an argument with the fo
 
 <docgen-index>
 
-- [`connect(...)`](#connect)
-- [`disconnect()`](#disconnect)
-- [`subscribe(...)`](#subscribe)
-- [`publish(...)`](#publish)
-- [`addListener('onConnectionLost', ...)`](#addlisteneronconnectionlost)
-- [`addListener('onConnectComplete', ...)`](#addlisteneronconnectcomplete)
-- [`addListener('onMessageArrived', ...)`](#addlisteneronmessagearrived)
-- [Interfaces](#interfaces)
-- [Type Aliases](#type-aliases)
+* [`connect(...)`](#connect)
+* [`disconnect()`](#disconnect)
+* [`subscribe(...)`](#subscribe)
+* [`publish(...)`](#publish)
+* [`addListener('onConnectionLost', ...)`](#addlisteneronconnectionlost)
+* [`addListener('onConnectComplete', ...)`](#addlisteneronconnectcomplete)
+* [`addListener('onMessageArrived', ...)`](#addlisteneronmessagearrived)
+* [Interfaces](#interfaces)
+* [Type Aliases](#type-aliases)
 
 </docgen-index>
 
@@ -246,7 +232,8 @@ connect(options: { serverURI: string; port: number; clientId: string; username: 
 
 **Returns:** <code>Promise&lt;any&gt;</code>
 
----
+--------------------
+
 
 ### disconnect()
 
@@ -256,7 +243,8 @@ disconnect() => Promise<any>
 
 **Returns:** <code>Promise&lt;any&gt;</code>
 
----
+--------------------
+
 
 ### subscribe(...)
 
@@ -270,7 +258,8 @@ subscribe(options: { topic: string; qos: number; }) => Promise<{ topic: string; 
 
 **Returns:** <code>Promise&lt;{ topic: string; qos: number; }&gt;</code>
 
----
+--------------------
+
 
 ### publish(...)
 
@@ -284,7 +273,8 @@ publish(options: { topic: string; payload: string; qos: number; retained: boolea
 
 **Returns:** <code>Promise&lt;{ topic: string; payload: string; qos: number; retained: boolean; messageId: any; }&gt;</code>
 
----
+--------------------
+
 
 ### addListener('onConnectionLost', ...)
 
@@ -299,7 +289,8 @@ addListener(eventName: 'onConnectionLost', listener: onConnectionLostListener) =
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
----
+--------------------
+
 
 ### addListener('onConnectComplete', ...)
 
@@ -314,7 +305,8 @@ addListener(eventName: 'onConnectComplete', listener: onConnectCompleteListener)
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
----
+--------------------
+
 
 ### addListener('onMessageArrived', ...)
 
@@ -329,9 +321,11 @@ addListener(eventName: 'onMessageArrived', listener: onMessageArrivedListener) =
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
----
+--------------------
+
 
 ### Interfaces
+
 
 #### PluginListenerHandle
 
@@ -339,15 +333,19 @@ addListener(eventName: 'onMessageArrived', listener: onMessageArrivedListener) =
 | ------------ | ----------------------------------------- |
 | **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
+
 ### Type Aliases
+
 
 #### onConnectionLostListener
 
 <code>(x: { connectionStatus: string; reasonCode: number; message: string; }): void</code>
 
+
 #### onConnectCompleteListener
 
 <code>(x: { reconnected: boolean; serverURI: string; }): void</code>
+
 
 #### onMessageArrivedListener
 
